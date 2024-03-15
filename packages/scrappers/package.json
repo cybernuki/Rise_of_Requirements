@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
       "scrap:all" : "node ./index.js",
-      "scrap:ch" : "node ./ch/city_hall.js"
+      "scrap:ch" : "node ./src/ch/city_hall.js"
     },
     "author": "",
     "license": "ISC",
