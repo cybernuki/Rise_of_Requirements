@@ -1,5 +1,5 @@
 {
-    "name": "rok_main_scrapper",
+    "name": "rok_scrapper",
     "version": "0.0.1",
     "description": "incredible bot to ask about a building path in RoK",
     "main": "index.js",

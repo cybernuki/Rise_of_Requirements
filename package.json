@@ -1,8 +1,7 @@
 {
   "name": "rok_main",
   "workspaces":[
-    "src/packages/scrapper",
-    "src/packages/discord_bot"
+    "packages/*"
   ],
   "version": "0.0.1",
   "description": "incredible bot to ask about a building path in RoK",

@@ -1,15 +1,16 @@
 {
-    "name": "rok_main_discord_bot",
+    "name": "rok_discord_bot",
     "version": "0.0.1",
     "description": "incredible bot to ask about a building path in RoK",
     "main": "index.js",
     "scripts": {
-      "scrap:all" : "node ./index.js",
-      "scrap:ch" : "node ./ch/city_hall.js"
+        "scrap:all": "node ./index.js",
+        "scrap:ch": "node ./ch/city_hall.js"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "discord.js": "^14.12.1",
+        "eslint": "^8.57.0"
     }
-  }
-  
+}
