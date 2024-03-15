@@ -1,0 +1,16 @@
+{
+    "name": "rok_main_scrapper",
+    "version": "0.0.1",
+    "description": "incredible bot to ask about a building path in RoK",
+    "main": "index.js",
+    "scripts": {
+      "scrap:all" : "node ./index.js",
+      "scrap:ch" : "node ./ch/city_hall.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "cheerio": "^1.0.0-rc.12"
+    }
+  }
+  

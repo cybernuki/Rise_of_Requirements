@@ -1,5 +1,9 @@
 {
-  "name": "rok_building_bot",
+  "name": "rok_main",
+  "workspaces":[
+    "src/packages/scrapper",
+    "src/packages/discord_bot"
+  ],
   "version": "0.0.1",
   "description": "incredible bot to ask about a building path in RoK",
   "main": "index.js",
@@ -8,8 +12,5 @@
     "scrap:ch" : "node ./src/scrappers/ch/city_hall.js"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "cheerio": "^1.0.0-rc.12"
-  }
+  "license": "ISC"
 }
