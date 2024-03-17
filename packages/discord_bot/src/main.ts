@@ -39,6 +39,8 @@ const discordConnection = async (client: Client) => {
  * @param {Client} client - The Discord client
  */
 const loadCommands = async (client: Client) => {
+	console.info('Loading commands...');
+	client.commands = new Collection();
 	try {
 		for (const command of commands) {
 			const name = command.data.name;
@@ -52,6 +54,7 @@ const loadCommands = async (client: Client) => {
 		console.error('Failed to load commands', error);
 		process.exit(1);
 	}
+	console.info('Commands loaded!');
 };
 
 /**
@@ -59,6 +62,7 @@ const loadCommands = async (client: Client) => {
  * @param {Interaction<CacheType>} interaction - The interaction
  */
 const commandHandler = async (interaction: Interaction<CacheType>) => {
+	console.info('Handling command...');
 	if (!interaction.isChatInputCommand()) return;
 
 	const command = interaction.client.commands.get(interaction.commandName);
@@ -78,10 +82,12 @@ const commandHandler = async (interaction: Interaction<CacheType>) => {
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}
 	}
+	console.info('Command handled!');
 };
 
 // Boostrap the bot
 (async () => {
+	console.info('Boostrapping bot...');
 	await discordConnection(client);
 	loadCommands(client);
 
