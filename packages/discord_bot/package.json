@@ -4,15 +4,20 @@
     "description": "incredible bot to ask about a building path in RoK",
     "main": "index.js",
     "scripts": {
-        "start:dev": "nodemon src/main.ts"
+        "build": "tsc -p ts.config.build.json",
+        "start:dev": "nodemon src/main.ts",
+        "start": "nodemon dist/src/main.js",
+        "deploy:commands:dev": "nodemon ./src/deploy-commands.ts",
+        "deploy:commands": "node dist/src/deploy-commands.ts"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "discord.js": "^14.14.1",
+        "dotenv": "^16.4.5"
+    },
+    "devDependencies": {
         "@tsconfig/node20": "^20.1.2",
-        "discord-api-types": "^0.37.74",
-        "discord.js": "^14.12.1",
-        "dotenv": "^16.4.5",
         "eslint": "^8.57.0",
         "nodemon": "^3.1.0",
         "ts-node": "^10.9.2"

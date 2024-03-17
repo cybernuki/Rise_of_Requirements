@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "scrap:all" : "node ./packages/scrappers/index.js",
-    "scrap:ch" : "node ./packages/scrappers/ch/city_hall.js"
+    "scrap:ch" : "node ./packages/scrappers/ch/city_hall.js",
+    "discord_bot:i:dependency": "npm i -w ./packages/discord_bot"
   },
   "author": "",
   "license": "ISC"
