@@ -1,15 +1,13 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
+import getCommandsCollection from './utils/load_commands.helper';
+import dotenv from 'dotenv';
+dotenv.config();
 
 declare module 'discord.js' {
 	interface Client {
 		commands: Collection<string, any>;
 	}
 }
-
-import commands from './commands';
-import dotenv from 'dotenv';
-dotenv.config();
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 /**
@@ -33,22 +31,17 @@ const discordConnection = async (client: Client) => {
 	}
 };
 
+
 /**
- * Loads the commands into the client
- * @param {Client} client - The Discord client
+ * Loads the commands for the Discord bot.
+ * @param {Client} client - The Discord client.
+ * @remarks This function loads the commands for the Discord bot by setting the `commands` property of the client.
+ * If an error occurs while loading the commands, the function will log an error message and exit the process with a non-zero exit code.
  */
-const loadCommands = async (client: Client) => {
+const loadCommands = (client: Client) => {
 	console.info('Loading commands...');
-	client.commands = new Collection();
 	try {
-		for (const command of commands) {
-			const name = command.data.name;
-			if ('data' in command && 'execute' in command) {
-				client.commands.set(command.data.name, command);
-			} else {
-				throw new Error(`The command at ${name} is missing a required "data" or "execute" property.`, { cause: 'missing data or execute property' });
-			}
-		}
+		client.commands = getCommandsCollection();
 	} catch (error) {
 		console.error('Failed to load commands', error);
 		process.exit(1);
