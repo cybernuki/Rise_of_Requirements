@@ -1,0 +1,15 @@
+{
+  "name": "rok_main",
+  "workspaces":[
+    "packages/*"
+  ],
+  "version": "0.0.1",
+  "description": "incredible bot to ask about a building path in RoK",
+  "main": "index.js",
+  "scripts": {
+    "scrap:all" : "node ./packages/scrappers/index.js",
+    "scrap:ch" : "node ./packages/scrappers/ch/city_hall.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
