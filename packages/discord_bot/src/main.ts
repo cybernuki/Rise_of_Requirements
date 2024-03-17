@@ -1,15 +1,11 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
+import { getCommandsCollection, config } from './utils';
 
 declare module 'discord.js' {
 	interface Client {
 		commands: Collection<string, any>;
 	}
 }
-
-import commands from './commands';
-import dotenv from 'dotenv';
-dotenv.config();
-
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
 /**
@@ -26,29 +22,24 @@ client.once(Events.ClientReady, readyClient => {
  */
 const discordConnection = async (client: Client) => {
 	try {
-		await client.login(process.env.DISCORD_TOKEN);
+		await client.login(config.token);
 	} catch (error) {
 		console.error('Failed to login to discord', error);
 		process.exit(1);
 	}
 };
 
+
 /**
- * Loads the commands into the client
- * @param {Client} client - The Discord client
+ * Loads the commands for the Discord bot.
+ * @param {Client} client - The Discord client.
+ * @remarks This function loads the commands for the Discord bot by setting the `commands` property of the client.
+ * If an error occurs while loading the commands, the function will log an error message and exit the process with a non-zero exit code.
  */
-const loadCommands = async (client: Client) => {
+const loadCommands = (client: Client) => {
 	console.info('Loading commands...');
-	client.commands = new Collection();
 	try {
-		for (const command of commands) {
-			const name = command.data.name;
-			if ('data' in command && 'execute' in command) {
-				client.commands.set(command.data.name, command);
-			} else {
-				throw new Error(`The command at ${name} is missing a required "data" or "execute" property.`, { cause: 'missing data or execute property' });
-			}
-		}
+		client.commands = getCommandsCollection();
 	} catch (error) {
 		console.error('Failed to load commands', error);
 		process.exit(1);
@@ -58,9 +49,9 @@ const loadCommands = async (client: Client) => {
 
 /**
  * Handles the execution of commands
- * @param {Interaction<CacheType>} interaction - The interaction
+ * @param interaction - The interaction
  */
-const commandHandler = async (interaction: Interaction<CacheType>) => {
+const commandHandler = async (interaction: any) => {
 	console.info('Handling command...');
 	if (!interaction.isChatInputCommand()) return;
 
@@ -89,6 +80,5 @@ const commandHandler = async (interaction: Interaction<CacheType>) => {
 	console.info('Boostrapping bot...');
 	await discordConnection(client);
 	loadCommands(client);
-
 	client.on(Events.InteractionCreate, commandHandler);
 })();

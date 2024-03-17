@@ -4,7 +4,7 @@
     "_version": "20.1.0",
 
     "include": ["src/**/*"],
-    "exclude": ["**/*.spec.ts"],
+    "exclude": ["**/*.spec.ts", "node_modules", "dist"],
   
     "compilerOptions": {
       "lib": ["es2023"],
@@ -15,6 +15,9 @@
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
-      "moduleResolution": "node16"
+      "moduleResolution": "node16",
+      "removeComments": true,
+      "outDir": "./dist",
+      "baseUrl": ".",
     }
 }
