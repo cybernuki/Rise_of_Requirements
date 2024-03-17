@@ -1,6 +1,5 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
 
-// Extend the Client interface to include a 'commands' property
 declare module 'discord.js' {
 	interface Client {
 		commands: Collection<string, any>;
