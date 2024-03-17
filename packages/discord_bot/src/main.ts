@@ -1,20 +1,31 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
+
+// Extend the Client interface to include a 'commands' property
 declare module 'discord.js' {
 	interface Client {
 		commands: Collection<string, any>;
 	}
 }
+
 import commands from './commands';
 import dotenv from 'dotenv';
 dotenv.config();
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-client.commands = new Collection();
+
+/**
+ * Event handler for when the client is ready
+ * @param {Client} readyClient - The ready client
+ */
 client.once(Events.ClientReady, readyClient => {
 	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
-const bootstrap = async (client: Client) => {
+/**
+ * Connects the client to Discord
+ * @param {Client} client - The Discord client
+ */
+const discordConnection = async (client: Client) => {
 	try {
 		await client.login(process.env.DISCORD_TOKEN);
 	} catch (error) {
@@ -23,6 +34,10 @@ const bootstrap = async (client: Client) => {
 	}
 };
 
+/**
+ * Loads the commands into the client
+ * @param {Client} client - The Discord client
+ */
 const loadCommands = async (client: Client) => {
 	try {
 		for (const command of commands) {
@@ -39,6 +54,10 @@ const loadCommands = async (client: Client) => {
 	}
 };
 
+/**
+ * Handles the execution of commands
+ * @param {Interaction<CacheType>} interaction - The interaction
+ */
 const commandHandler = async (interaction: Interaction<CacheType>) => {
 	if (!interaction.isChatInputCommand()) return;
 
@@ -61,9 +80,9 @@ const commandHandler = async (interaction: Interaction<CacheType>) => {
 	}
 };
 
-
+// Boostrap the bot
 (async () => {
-	await bootstrap(client);
+	await discordConnection(client);
 	loadCommands(client);
 
 	client.on(Events.InteractionCreate, commandHandler);
