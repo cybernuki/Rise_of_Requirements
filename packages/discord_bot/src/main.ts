@@ -1,20 +1,12 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
 import { getCommandsCollection, config } from './utils';
+import { events } from './events';
 
 declare module 'discord.js' {
 	interface Client {
 		commands: Collection<string, any>;
 	}
 }
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-
-/**
- * Event handler for when the client is ready
- * @param {Client} readyClient - The ready client
- */
-client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
-});
 
 /**
  * Connects the client to Discord
@@ -47,38 +39,37 @@ const loadCommands = (client: Client) => {
 	console.info('Commands loaded!');
 };
 
-/**
- * Handles the execution of commands
- * @param interaction - The interaction
- */
-const commandHandler = async (interaction: any) => {
-	console.info('Handling command...');
-	if (!interaction.isChatInputCommand()) return;
 
-	const command = interaction.client.commands.get(interaction.commandName);
 
-	if (!command) {
-		console.error(`No command matching ${interaction.commandName} was found.`);
-		return;
-	}
+const registerEvents = (client: Client) => { 
+	console.info('Loading events...');
 
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({ content: 'There was an error while executing this command!', ephemeral: true });
+	for (const event of events) {
+		if (event.once) {
+			console.info('Once event registered :', event.name);
+			client.once(event.name, (...args) => {
+				// @ts-ignore
+				event.execute(...args)
+			});
 		} else {
-			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			console.info('On event registered :', event.name);
+			client.on(event.name, (...args) =>  {
+				// @ts-ignore
+				event.execute(...args)
+			});
 		}
 	}
-	console.info('Command handled!');
-};
+
+	console.info('Events loaded!');
+}
+
 
 // Boostrap the bot
 (async () => {
+	const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 	console.info('Boostrapping bot...');
+	registerEvents(client);
 	await discordConnection(client);
 	loadCommands(client);
-	client.on(Events.InteractionCreate, commandHandler);
+	
 })();
