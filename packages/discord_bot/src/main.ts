@@ -1,7 +1,5 @@
 import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
-import getCommandsCollection from './utils/load_commands.helper';
-import dotenv from 'dotenv';
-dotenv.config();
+import { getCommandsCollection, config } from './utils';
 
 declare module 'discord.js' {
 	interface Client {
@@ -24,7 +22,7 @@ client.once(Events.ClientReady, readyClient => {
  */
 const discordConnection = async (client: Client) => {
 	try {
-		await client.login(process.env.DISCORD_TOKEN);
+		await client.login(config.token);
 	} catch (error) {
 		console.error('Failed to login to discord', error);
 		process.exit(1);
@@ -51,9 +49,9 @@ const loadCommands = (client: Client) => {
 
 /**
  * Handles the execution of commands
- * @param {Interaction<CacheType>} interaction - The interaction
+ * @param interaction - The interaction
  */
-const commandHandler = async (interaction: Interaction<CacheType>) => {
+const commandHandler = async (interaction: any) => {
 	console.info('Handling command...');
 	if (!interaction.isChatInputCommand()) return;
 
@@ -82,6 +80,5 @@ const commandHandler = async (interaction: Interaction<CacheType>) => {
 	console.info('Boostrapping bot...');
 	await discordConnection(client);
 	loadCommands(client);
-
 	client.on(Events.InteractionCreate, commandHandler);
 })();
