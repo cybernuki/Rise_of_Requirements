@@ -1,5 +1,5 @@
 import { CommandInterface } from './interface/command.interface';
-import utilityCommands from './utility';
+import cityHallCommands from './city-hall';
 
-const commands: CommandInterface[] = [...utilityCommands];
+const commands: CommandInterface[] = [...cityHallCommands];
 export default commands;

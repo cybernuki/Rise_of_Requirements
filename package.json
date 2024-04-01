@@ -7,8 +7,7 @@
   "description": "incredible bot to ask about a building path in RoK",
   "main": "index.js",
   "scripts": {
-    "scrap:all" : "node ./packages/scrappers/index.js",
-    "scrap:ch" : "node ./packages/scrappers/ch/city_hall.js",
+    "scrappers:i:dependency": "npm i -w ./packages/scrappers",
     "discord_bot:i:dependency": "npm i -w ./packages/discord_bot"
   },
   "author": "",

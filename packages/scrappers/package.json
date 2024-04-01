@@ -1,0 +1,14 @@
+{
+    "name": "rok_scrappers",
+    "version": "0.0.1",
+    "description": "incredible bot to ask about a building path in RoK",
+    "main": "index.js",
+    "scripts": {
+        "start": "node ./index.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "cheerio": "^1.0.0-rc.12"
+    }
+}
