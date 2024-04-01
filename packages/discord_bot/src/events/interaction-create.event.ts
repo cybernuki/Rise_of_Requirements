@@ -1,5 +1,11 @@
-import  { Events, Interaction }  from 'discord.js';
+import  { Collection, Events, Interaction }  from 'discord.js';
 import { EventInterface } from './interface/event.interface';
+
+declare module 'discord.js' {
+	interface Client {
+		commands: Collection<string, any>;
+	}
+}
 
 export const interactionCreateEvent = {
 	name: Events.InteractionCreate,

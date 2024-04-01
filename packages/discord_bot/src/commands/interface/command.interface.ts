@@ -1,6 +1,6 @@
-import { Interaction, SlashCommandBuilder } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 
 export interface CommandInterface {
   data: Omit<SlashCommandBuilder, "addSubcommand" | "addSubcommandGroup">;
-  execute: (interaction: Interaction<any>) => Promise<void>;
+  execute: (interaction: ChatInputCommandInteraction<CacheType>) => Promise<void>;
 }

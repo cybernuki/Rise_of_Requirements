@@ -19,5 +19,6 @@
       "removeComments": true,
       "outDir": "./dist",
       "baseUrl": ".",
+      "resolveJsonModule": true,
     }
 }

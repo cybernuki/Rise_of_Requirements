@@ -1,24 +1,27 @@
-import { SlashCommandBuilder } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
+import city_hall_data from './city_hall.json';
 
-
-const commands: CommandInterface = {
+const choices = city_hall_data.map((level_req: { level: any; }) => { return { name: String(level_req.level), value: String(level_req.level) } });
+const chRequirementCommand: CommandInterface = {
   data: new SlashCommandBuilder()
-    .setName('ch requeriments')
+    .setName('chrequeriments')
     .setDescription('.')
     .addStringOption(option =>
       option.setName('level')
         .setDescription('The requeriment to check')
         .setRequired(true)
         .addChoices(
-          { name: 'Funny', value: 'gif_funny' },
-          { name: 'Meme', value: 'gif_meme' },
-          { name: 'Movie', value: 'gif_movie' },
+          ...choices
         )
-      ),
+    ),
 
-  async execute(interaction: any) {
-    await interaction.reply('hello', { ephemeral: true });
+  async execute(interaction: ChatInputCommandInteraction<CacheType>) {
+    await interaction.deferReply({  ephemeral: true });
+    const city_hall = city_hall_data.find(city_hall => interaction.options.getString('level') === String(city_hall.level));
+    
+    const  payload = city_hall?.requirements.join(' ') || '';
+    await interaction.editReply(payload);
   },
 };
-export default commands
+export default chRequirementCommand
