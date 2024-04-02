@@ -1,27 +1,28 @@
-import { CacheType, ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import { CacheType, ChatInputCommandInteraction, MessagePayload, SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
-import city_hall_data from './city_hall.json';
+import { CityHallService } from "./services/city_hall.service";
+import { CityHallRequerimentsEmbed } from "../../embeds/city_hall_requierements.emebed";
 
-const choices = city_hall_data.map((level_req: { level: any; }) => { return { name: String(level_req.level), value: String(level_req.level) } });
 const chRequirementCommand: CommandInterface = {
   data: new SlashCommandBuilder()
-    .setName('chrequeriments')
-    .setDescription('.')
+    .setName('ch_requeriments')
+    .setDescription('Get information about the requirements to upgrade your City Hall.')
+    .setNSFW(false)
     .addStringOption(option =>
       option.setName('level')
-        .setDescription('The requeriment to check')
+        .setDescription('City hall level you want to check')
         .setRequired(true)
         .addChoices(
-          ...choices
+          ...CityHallService.getChoices()
         )
     ),
 
   async execute(interaction: ChatInputCommandInteraction<CacheType>) {
     await interaction.deferReply({  ephemeral: true });
-    const city_hall = city_hall_data.find(city_hall => interaction.options.getString('level') === String(city_hall.level));
-    
-    const  payload = city_hall?.requirements.join(' ') || '';
-    await interaction.editReply(payload);
+    const cityHall = CityHallService.findCityHallByLevel(interaction.options.getString('level', true))
+  
+    const messagePayload : MessagePayload = new MessagePayload(interaction.user,{embeds: [...CityHallRequerimentsEmbed.getCityHallRequirements(cityHall)]});
+    await interaction.editReply(messagePayload);
   },
 };
 export default chRequirementCommand
