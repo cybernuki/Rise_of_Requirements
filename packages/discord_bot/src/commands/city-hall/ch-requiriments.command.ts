@@ -5,7 +5,7 @@ import { CityHallRequerimentsEmbed } from "../../embeds/city_hall_requierements.
 
 const chRequirementCommand: CommandInterface = {
   data: new SlashCommandBuilder()
-    .setName('chrequeriments')
+    .setName('ch_requeriments')
     .setDescription('.')
     .addStringOption(option =>
       option.setName('level')
