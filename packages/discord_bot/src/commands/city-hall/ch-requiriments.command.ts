@@ -6,10 +6,11 @@ import { CityHallRequerimentsEmbed } from "../../embeds/city_hall_requierements.
 const chRequirementCommand: CommandInterface = {
   data: new SlashCommandBuilder()
     .setName('ch_requeriments')
-    .setDescription('.')
+    .setDescription('Get information about the requirements to upgrade your City Hall.')
+    .setNSFW(false)
     .addStringOption(option =>
       option.setName('level')
-        .setDescription('The requeriment to check')
+        .setDescription('City hall level you want to check')
         .setRequired(true)
         .addChoices(
           ...CityHallService.getChoices()
