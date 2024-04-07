@@ -1,6 +1,15 @@
-import { CacheType, Client, Collection, Events, GatewayIntentBits, Interaction } from 'discord.js';
-import { getCommandsCollection, config } from './utils';
+import { Client, Collection, GatewayIntentBits } from 'discord.js';
+import { getCommandsCollection } from './utils';
 import { events } from './events';
+import dotenv from 'dotenv';
+dotenv.config();
+
+const config = {
+  clientId: process.env.DISCORD_CLIENT_ID ||'',
+  guildId: process.env.DISCORD_GUILD_ID ||'',
+  token: process.env.DISCORD_TOKEN ||'',
+}
+
 
 declare module 'discord.js' {
 	interface Client {
@@ -41,7 +50,7 @@ const loadCommands = (client: Client) => {
 
 
 
-const registerEvents = (client: Client) => { 
+const registerEvents = (client: Client) => {
 	console.info('Loading events...');
 
 	for (const event of events) {
@@ -53,7 +62,7 @@ const registerEvents = (client: Client) => {
 			});
 		} else {
 			console.info('On event registered :', event.name);
-			client.on(event.name, (...args) =>  {
+			client.on(event.name, (...args) => {
 				// @ts-ignore
 				event.execute(...args)
 			});
@@ -71,5 +80,5 @@ const registerEvents = (client: Client) => {
 	registerEvents(client);
 	await discordConnection(client);
 	loadCommands(client);
-	
+
 })();

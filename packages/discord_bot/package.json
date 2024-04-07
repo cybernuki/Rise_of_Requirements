@@ -4,9 +4,9 @@
     "description": "incredible bot to ask about a building path in RoK",
     "main": "index.js",
     "scripts": {
-        "build": "tsc -p ts.config.build.json",
+        "build": "tsc -p tsconfig.build.json",
         "start:dev": "nodemon src/main.ts",
-        "start": "nodemon dist/src/main.js",
+        "start": "node dist/main.js",
         "deploy:commands:global:dev": "nodemon ./src/deploy-global-commands.ts",
         "deploy:commands:global": "node dist/src/deploy-global-commands.ts"
     },
