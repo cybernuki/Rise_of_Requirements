@@ -1,5 +1,6 @@
 import { REST, Routes } from 'discord.js';
-import { getCommandsCollection } from './utils';
+import { getCommandsCollection } from '../utils';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,13 +18,13 @@ const rest = new REST().setToken(config.token);
 // and deploy your commands!
 (async () => {
 	try {
-		const guildCommands = commands.filter(value => value.guildOnly);
-		console.log(`Started refreshing ${guildCommands.size} application (/) commands.`);
+		const globalCommands = commands.filter(value => !value.guildOnly);
+		console.log(`Started refreshing ${globalCommands.size} application (/) commands.`);
 
 		// The put method is used to fully refresh all commands in the guild with the current set
-		const body = [...guildCommands.mapValues(command => command.data.toJSON()).values()];
+		const body = [...globalCommands.mapValues(command => command.data.toJSON()).values()];
 		const data = await rest.put(
-			Routes.applicationGuildCommands(config.clientId, config.guildId),
+			Routes.applicationCommands(config.clientId),
 			{ body: body },
 		) as any[];
 
