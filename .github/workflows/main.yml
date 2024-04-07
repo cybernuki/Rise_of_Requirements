@@ -18,8 +18,8 @@ jobs:
 
       - name: npm install and build
         run: |
-          npm i -w ./packages/discord_bot
-          npm run build -w ./packages/discord_bot
+          npm ci 
+          npm run build --workspaces --if-present
           
       - name: deploy commands
-        run: npm run deploy:commands -w ./packages/discord_bot
+        run: npm run start -w rok_command_deployment
