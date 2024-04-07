@@ -7,10 +7,13 @@
         "build": "tsc -p tsconfig.build.json",
         "start:dev": "nodemon src/main.ts",
         "start": "node dist/main.js",
-        "deploy:commands:global:dev": "nodemon ./src/deploy-global-commands.ts",
-        "deploy:commands:global": "node dist/deploy-global-commands.js",
-        "deploy:commands:guild:dev": "nodemon ./src/deploy-guild-commands.ts",
-        "deploy:commands:guild": "node dist/deploy-guild-commands.js"
+        "deploy:commands:clean:dev": "nodemon ./src/deployments/deploy-clean-commands.ts",
+        "deploy:commands:global:dev": "nodemon ./src/deployments/deploy-global-commands.ts",
+        "deploy:commands:guild:dev": "nodemon ./src/deployments/deploy-guild-commands.ts",
+        "deploy:commands:clean": "node dist/deployments/deploy-clean-commands.js",
+        "deploy:commands:guild": "node dist/deployments/deploy-guild-commands.js",
+        "deploy:commands:global": "node dist/deployments/deploy-global-commands.js",
+        "deploy:commands": "npm run deploy:commands:clean && npm run deploy:commands:guild && npm run deploy:commands:global"
     },
     "author": "",
     "license": "ISC",

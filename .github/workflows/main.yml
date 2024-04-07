@@ -21,8 +21,5 @@ jobs:
           npm i -w ./packages/discord_bot
           npm run build -w ./packages/discord_bot
           
-      - name: deploy global commands
-        run: npm run deploy:commands:global -w ./packages/discord_bot
-
-      - name: deploy guild commands
-        run: npm run deploy:commands:guild -w ./packages/discord_bot
+      - name: deploy commands
+        run: npm run deploy:commands -w ./packages/discord_bot
