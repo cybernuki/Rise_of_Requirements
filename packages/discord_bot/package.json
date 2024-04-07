@@ -8,7 +8,9 @@
         "start:dev": "nodemon src/main.ts",
         "start": "node dist/main.js",
         "deploy:commands:global:dev": "nodemon ./src/deploy-global-commands.ts",
-        "deploy:commands:global": "node dist/src/deploy-global-commands.ts"
+        "deploy:commands:global": "node dist/deploy-global-commands.js",
+        "deploy:commands:guild:dev": "nodemon ./src/deploy-guild-commands.ts",
+        "deploy:commands:guild": "node dist/deploy-guild-commands.js"
     },
     "author": "",
     "license": "ISC",
