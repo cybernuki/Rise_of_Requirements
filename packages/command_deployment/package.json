@@ -1,5 +1,5 @@
 {
-    "name": "rok_discord_bot",
+    "name": "rok_command_deployment",
     "version": "0.0.1",
     "description": "incredible bot to ask about a building path in RoK",
     "main": "index.js",
@@ -12,7 +12,8 @@
     "license": "ISC",
     "dependencies": {
         "discord.js": "^14.14.1",
-        "dotenv": "^16.4.5"
+        "dotenv": "^16.4.5",
+        "rok_discord_bot": "*"
     },
     "devDependencies": {
         "@tsconfig/node20": "^20.1.2",

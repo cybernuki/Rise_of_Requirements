@@ -1,22 +1,13 @@
-import { REST, Routes } from 'discord.js';
-import { getCommandsCollection } from '../utils';
+import { Collection, REST, Routes } from 'discord.js';
+import { CommandInterface } from 'rok_discord_bot/src/commands/interface/command.interface';
 
-import dotenv from 'dotenv';
-dotenv.config();
-
-const config = {
-  clientId: process.env.DISCORD_CLIENT_ID ||'',
-  guildId: process.env.DISCORD_GUILD_ID ||'',
-  token: process.env.DISCORD_TOKEN ||'',
-}
-
-const commands = getCommandsCollection();
-
-// Construct and prepare an instance of the REST module
-const rest = new REST().setToken(config.token);
 
 // and deploy your commands!
-(async () => {
+export const globalCommandsDeployment = async (
+	rest: REST,
+	commands: Collection<string, CommandInterface>,
+	clientId: string
+) => {
 	try {
 		const globalCommands = commands.filter(value => !value.guildOnly);
 		console.log(`Started refreshing ${globalCommands.size} application (/) commands.`);
@@ -24,7 +15,7 @@ const rest = new REST().setToken(config.token);
 		// The put method is used to fully refresh all commands in the guild with the current set
 		const body = [...globalCommands.mapValues(command => command.data.toJSON()).values()];
 		const data = await rest.put(
-			Routes.applicationCommands(config.clientId),
+			Routes.applicationCommands(clientId),
 			{ body: body },
 		) as any[];
 
@@ -32,6 +23,6 @@ const rest = new REST().setToken(config.token);
 	} catch (error) {
 		// And of course, make sure you catch and log any errors!
 		console.error(error);
-    process.exit(1);
+		process.exit(1);
 	}
-})();
+};
