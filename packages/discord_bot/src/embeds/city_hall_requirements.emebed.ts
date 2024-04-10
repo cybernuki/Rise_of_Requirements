@@ -1,4 +1,4 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedRoRBuilder } from "./base_builder.embed";
 
 export class CityHallRequerimentsEmbed {
 
@@ -13,16 +13,15 @@ export class CityHallRequerimentsEmbed {
   }
 
   public static getCityHallRequirements(cityHallData: any) {
-    const headerEmbed = new EmbedBuilder().setColor('#6A4CE4')
+    const headerEmbed = new EmbedRoRBuilder({ setAuthor: true })
       .setTitle(`City Hall Lv. ${cityHallData.level}`)
-      .setAuthor({ name: 'RoK Building', iconURL: 'https://static.wikia.nocookie.net/riseofcivilizations/images/5/54/Item_Builder_Recruitment.png/revision/latest/scale-to-width-down/46?cb=20181127142215' })
       .setThumbnail('https://static.wikia.nocookie.net/riseofcivilizations/images/5/59/Building_City_Hall_1_5.png/revision/latest/scale-to-width-down/500')
       .addFields(
-        {name: 'Next level requirements', value: cityHallData.requirements.join('\n') || 'Nothing', inline: true},
-        {name: 'Level unlocks', value: cityHallData.unlocks.join('\n') || 'Nothing cool', inline: true},
-        );
+        { name: 'Next level requirements', value: cityHallData.requirements.join('\n') || 'Nothing', inline: true },
+        { name: 'Level unlocks', value: cityHallData.unlocks.join('\n') || 'Nothing cool', inline: true },
+      );
 
-    const costEmbed = new EmbedBuilder().setColor('#6A4CE4')
+    const costEmbed = new EmbedRoRBuilder()
       .setTitle(`Resources to next level`);
     const { food, wood, stone } = cityHallData.cost;
 
