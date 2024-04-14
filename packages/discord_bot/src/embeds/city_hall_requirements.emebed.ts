@@ -3,7 +3,7 @@ import { EmbedRoRBuilder } from "./base_builder.embed";
 export class CityHallRequerimentsEmbed {
 
   private static formatResourceMillions(resource: number) {
-    if (resource < 100000) {
+    if (resource < 1000000) {
       return String(`${resource / 1000} K`);
     }
     if (resource < 1000000000) {
