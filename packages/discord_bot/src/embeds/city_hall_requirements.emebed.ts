@@ -17,12 +17,12 @@ export class CityHallRequerimentsEmbed {
       .setTitle(`City Hall Lv. ${cityHallData.level}`)
       .setThumbnail('https://static.wikia.nocookie.net/riseofcivilizations/images/5/59/Building_City_Hall_1_5.png/revision/latest/scale-to-width-down/500')
       .addFields(
-        { name: 'Next level requirements', value: cityHallData.requirements.join('\n') || 'Nothing', inline: true },
+        { name: 'Level requirements', value: cityHallData.requirements.join('\n') || 'Nothing', inline: true },
         { name: 'Level unlocks', value: cityHallData.unlocks.join('\n') || 'Nothing cool', inline: true },
       );
 
     const costEmbed = new EmbedRoRBuilder()
-      .setTitle(`Resources to next level`);
+      .setTitle(`Resources to unlock level`);
     const { food, wood, stone } = cityHallData.cost;
 
 
