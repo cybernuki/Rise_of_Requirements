@@ -11,6 +11,8 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
+        "@aws-sdk/client-dynamodb": "^3.564.0",
+        "@aws-sdk/lib-dynamodb": "^3.564.0",
         "discord.js": "^14.14.1",
         "dotenv": "^16.4.5",
         "rok_discord_bot": "*"
