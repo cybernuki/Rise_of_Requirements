@@ -46,7 +46,7 @@ export const AutoCompleteInteractionCreationEvent: EventInterface = {
 		}
 
 		try {
-				await command.autocomplete();
+				await command.autocomplete(interaction);
 		} catch (error) {
 			console.error(error);
 		}
