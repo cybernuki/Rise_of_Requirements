@@ -7,9 +7,8 @@ declare module 'discord.js' {
 	}
 }
 
-export const interactionCreateEvent = {
+export const chatInputInteractionCreationEvent: EventInterface = {
 	name: Events.InteractionCreate,
-  once: false,
 	async execute(interaction:Interaction) {
 		if (!interaction.isChatInputCommand()) return;
 
@@ -21,12 +20,7 @@ export const interactionCreateEvent = {
 		}
 
 		try {
-			if (interaction.isChatInputCommand()) {
 				await command.execute(interaction);
-			}
-			if (interaction.isAutocomplete()) {
-				await command.autoComplete();
-			}
 		} catch (error) {
 			console.error(error);
 			if (interaction.replied || interaction.deferred) {
@@ -36,4 +30,25 @@ export const interactionCreateEvent = {
 			}
 		}
 	},
-} as EventInterface;
+};
+
+
+export const AutoCompleteInteractionCreationEvent: EventInterface = {
+	name: Events.InteractionCreate,
+	async execute(interaction:Interaction) {
+		if (!interaction.isAutocomplete()) return;
+
+		const command = interaction.client.commands.get(interaction.commandName);
+
+		if (!command) {
+			console.error(`No command matching ${interaction.commandName} was found.`);
+			return;
+		}
+
+		try {
+				await command.autocomplete();
+		} catch (error) {
+			console.error(error);
+		}
+	},
+};
