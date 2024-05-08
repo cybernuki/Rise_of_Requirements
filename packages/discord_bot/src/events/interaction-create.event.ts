@@ -21,7 +21,12 @@ export const interactionCreateEvent = {
 		}
 
 		try {
-			await command.execute(interaction);
+			if (interaction.isChatInputCommand()) {
+				await command.execute(interaction);
+			}
+			if (interaction.isAutocomplete()) {
+				await command.autoComplete();
+			}
 		} catch (error) {
 			console.error(error);
 			if (interaction.replied || interaction.deferred) {
