@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
+import { BuildingsService } from "./Services/buildings.service";
 
 const BuildingsCommand: CommandInterface = {
 	data: new SlashCommandBuilder()
@@ -18,34 +19,14 @@ const BuildingsCommand: CommandInterface = {
 				.setAutocomplete(true)),
 	async autocomplete(interaction) {
 		const focusedOption = interaction.options.getFocused(true);
-		let choices: any[] = [];
+		let choices: string[] = [];
 
 		if (focusedOption.name === 'building') {
-			choices = [
-				"city hall",
-				"academy",
-				"alliance center",
-				"archery range",
-				"barracks",
-				"castle",
-				"farm",
-				"goldmine",
-				"hospital",
-				"lumber mill",
-				"quarry",
-				"scout camp",
-				"siege workshop",
-				"stable",
-				"storehouse",
-				"tavern",
-				"trading post",
-				"wall",
-				"watchtower",
-			];
+			choices = BuildingsService.getBuildingsChoices();
 		}
 
 		if (focusedOption.name === 'level') {
-			choices = new Array(25).fill(null).map((_, i) => `${i+1}`);
+			choices = BuildingsService.getLevelChoices();
 		}
 
 		const filtered = choices.filter(choice => choice.toLowerCase().startsWith(focusedOption.value));
