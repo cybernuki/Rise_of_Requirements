@@ -2,35 +2,36 @@ import path from "path";
 import fs from "fs";
 export class BuildingsRepository {
 
-  protected  _BUILDINGS_METADATA = [
-    { name: 'city hall', jsonFile: path.join(__dirname, 'data', 'City_Hall.json'), data: [] },
-    { name: 'academy', jsonFile: path.join(__dirname, 'data', 'Academy.json'), data: [] },
-    { name: 'alliance center', jsonFile: path.join(__dirname, 'data', 'Alliance_Center.json'),data: [] },
-    { name: 'archery range', jsonFile: path.join(__dirname, 'data', 'Archery_Range.json'), data: [] },
-    { name: 'barracks', jsonFile: path.join(__dirname, 'data', 'Barracks.json'), data: [] },
-    { name: 'castle', jsonFile: path.join(__dirname, 'data', 'Castle.json'), data: [] },
-    { name: 'farm', jsonFile: path.join(__dirname, 'data', 'Farm.json'), data: [] },
-    { name: 'goldmine', jsonFile: path.join(__dirname, 'data', 'Goldmine.json'), data: [] },
-    { name: 'hospital', jsonFile: path.join(__dirname, 'data', 'Hospital.json'), data: [] },
-    { name: 'lumber mill', jsonFile: path.join(__dirname, 'data', 'Lumber_Mill.json'), data: [] },
-    { name: 'quarry', jsonFile: path.join(__dirname, 'data', 'Quarry.json'), data: [] },
-    { name: 'scout camp', jsonFile: path.join(__dirname, 'data', 'Scout_Camp.json'), data: [] },
-    { name: 'siege workshop', jsonFile: path.join(__dirname, 'data', 'Siege_Workshop.json'), data: [] },
-    { name: 'stable', jsonFile: path.join(__dirname, 'data', 'Stable.json'), data: [] },
-    { name: 'storehouse', jsonFile: path.join(__dirname, 'data', 'Storehouse.json'), data: [] },
-    { name: 'tavern', jsonFile: path.join(__dirname, 'data', 'Tavern.json'), data: [] },
-    { name: 'trading post', jsonFile: path.join(__dirname, 'data', 'Trading_Post.json'), data: [] },
-    { name: 'wall', jsonFile: path.join(__dirname, 'data', 'Wall.json'), data: []},
-    { name: 'watchtower', jsonFile: path.join(__dirname, 'data', 'Watchtower.json'), data: [] }
+  protected _jsonPath = path.join(__dirname, 'data')
+  protected _BUILDINGS_METADATA: { name: string, resource: string, data: any[] }[] = [
+    { name: 'city hall', resource: 'City_Hall', data: [] },
+    { name: 'academy', resource: 'Academy', data: [] },
+    { name: 'alliance center', resource: 'Alliance_Center', data: [] },
+    { name: 'archery range', resource: 'Archery_Range', data: [] },
+    { name: 'barracks', resource: 'Barracks', data: [] },
+    { name: 'castle', resource: 'Castle', data: [] },
+    { name: 'farm', resource: 'Farm', data: [] },
+    { name: 'goldmine', resource: 'Goldmine', data: [] },
+    { name: 'hospital', resource: 'Hospital', data: [] },
+    { name: 'lumber mill', resource: 'Lumber_Mill', data: [] },
+    { name: 'quarry', resource: 'Quarry', data: [] },
+    { name: 'scout camp', resource: 'Scout_Camp', data: [] },
+    { name: 'siege workshop', resource: 'Siege_Workshop', data: [] },
+    { name: 'stable', resource: 'Stable', data: [] },
+    { name: 'storehouse', resource: 'Storehouse', data: [] },
+    { name: 'tavern', resource: 'Tavern', data: [] },
+    { name: 'trading post', resource: 'Trading_Post', data: [] },
+    { name: 'wall', resource: 'Wall', data: [] },
+    { name: 'watchtower', resource: 'Watchtower', data: [] }
   ];
 
   private static _instance: BuildingsRepository = new BuildingsRepository();
 
-  constructor () {
+  constructor() {
     if (BuildingsRepository._instance) return BuildingsRepository._instance;
 
     this._BUILDINGS_METADATA.forEach((build) => {
-      const data = JSON.parse(fs.readFileSync(build.jsonFile, 'utf-8'));
+      const data = JSON.parse(fs.readFileSync(path.join(this._jsonPath, `${build.resource}.json`), 'utf-8'));
       build.data = data;
     })
 
@@ -41,16 +42,20 @@ export class BuildingsRepository {
     return this._instance;
   };
 
-  public  getBuildingsChoices() {
+  public getBuildingsChoices() {
     return this._BUILDINGS_METADATA.map(data => data.name);
   }
 
-  public  getLevelChoices() {
+  public getLevelChoices() {
     return new Array(25).fill(null).map((_, i) => `${i + 1}`);
   }
 
   public findBuildingByLevel(name: string, level: number) {
     const building = this._BUILDINGS_METADATA.filter(data => data.name === name).pop();
-    return building?.data[level - 1];
+    if (!building) return;
+    const levelData = building.data[level - 1];
+    levelData.name = building.name;
+    levelData.resource = building.resource;
+    return levelData;
   }
 }

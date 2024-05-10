@@ -1,7 +1,7 @@
 import { CacheType, ChatInputCommandInteraction, MessagePayload, SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
 import { CityHallService } from "./services/city_hall.service";
-import { CityHallRequerimentsEmbed } from "../../embeds/city_hall_requirements.emebed";
+import { BuildingRequerimentsEmbed } from "../../embeds/building_requirements.emebed";
 
 const chRequirementCommand: CommandInterface = {
   data: new SlashCommandBuilder()
@@ -18,10 +18,10 @@ const chRequirementCommand: CommandInterface = {
     ),
 
   async execute(interaction: ChatInputCommandInteraction<CacheType>) {
-    await interaction.deferReply({  ephemeral: true });
+    await interaction.deferReply({ ephemeral: true });
     const cityHall = CityHallService.findCityHallByLevel(interaction.options.getString('level', true))
-  
-    const messagePayload : MessagePayload = new MessagePayload(interaction.user,{embeds: [...CityHallRequerimentsEmbed.getCityHallRequirements(cityHall)]});
+
+    const messagePayload: MessagePayload = new MessagePayload(interaction.user, BuildingRequerimentsEmbed.getBuildingRequirements(cityHall));
     await interaction.editReply(messagePayload);
   },
 };

@@ -1,6 +1,9 @@
+import { AttachmentBuilder } from "discord.js";
 import { EmbedRoRBuilder } from "./base_builder.embed";
+import { startCase } from "lodash";
+import path from "path";
 
-export class CityHallRequerimentsEmbed {
+export class BuildingRequerimentsEmbed {
 
   private static formatResourceMillions(resource: number) {
     if (resource < 1000000) {
@@ -12,18 +15,22 @@ export class CityHallRequerimentsEmbed {
     return String(`${resource / 1000000000} B`);
   }
 
-  public static getCityHallRequirements(cityHallData: any) {
+  public static getBuildingRequirements(buildingData: any) {
+    const title = `${startCase(buildingData.name)} Lv. ${buildingData.level}`;
+    const ImageResource = `${buildingData.resource}.png`;
+    const ImageFile = new AttachmentBuilder(path.join(__dirname, 'assets', `${buildingData.resource}.png`));
+
     const headerEmbed = new EmbedRoRBuilder({ setAuthor: true })
-      .setTitle(`City Hall Lv. ${cityHallData.level}`)
-      .setThumbnail('https://static.wikia.nocookie.net/riseofcivilizations/images/5/59/Building_City_Hall_1_5.png/revision/latest/scale-to-width-down/500')
+      .setTitle(title)
+      .setThumbnail(`attachment://${ImageResource}`)
       .addFields(
-        { name: 'Level requirements', value: cityHallData.requirements.join('\n') || 'Nothing', inline: true },
-        { name: 'Level unlocks', value: cityHallData.unlocks.join('\n') || 'Nothing cool', inline: true },
+        { name: 'Level requirements', value: buildingData.requirements.join('\n') || 'Nothing', inline: true },
+        { name: 'Level unlocks', value: buildingData.unlocks.join('\n') || 'Nothing cool', inline: true },
       );
 
     const costEmbed = new EmbedRoRBuilder()
       .setTitle(`Resources to unlock level`);
-    const { food, wood, stone } = cityHallData.cost;
+    const { food, wood, stone } = buildingData.cost;
 
 
     if (food) {
@@ -41,7 +48,7 @@ export class CityHallRequerimentsEmbed {
 
 
 
-    return [headerEmbed, costEmbed];
+    return { embeds: [headerEmbed, costEmbed], files: [ImageFile] };
   }
 
 }

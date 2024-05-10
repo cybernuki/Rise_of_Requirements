@@ -1,6 +1,7 @@
-import { SlashCommandBuilder } from "discord.js";
+import { MessagePayload, SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
 import { BuildingsService } from "./Services/buildings.service";
+import { BuildingRequerimentsEmbed } from "../../embeds/building_requirements.emebed";
 
 const BuildingsCommand: CommandInterface = {
 	data: new SlashCommandBuilder()
@@ -12,7 +13,7 @@ const BuildingsCommand: CommandInterface = {
 				.setRequired(true)
 				.setDescription('Choose a building')
 				.setAutocomplete(true))
-		.addIntegerOption(option =>
+		.addStringOption(option =>
 			option.setName('level')
 				.setDescription('choose a level')
 				.setRequired(true)
@@ -36,11 +37,13 @@ const BuildingsCommand: CommandInterface = {
 	},
 
 	async execute(interaction) {
+		await interaction.deferReply();
 		const name = interaction.options.getString('building') || '';
-		const level = interaction.options.getInteger('level') || 1;
-		const data = BuildingsService.findBuildingByLevel(name, level);
-		
-		await interaction.reply(`you've chosen ${interaction.options.get('building')?.value} lvl ${interaction.options.get('level')?.value}`)
+		const level = interaction.options.getString('level') || '1';
+		const building = BuildingsService.findBuildingByLevel(name, parseInt(level));
+
+		const messagePayload: MessagePayload = new MessagePayload(interaction.user, BuildingRequerimentsEmbed.getBuildingRequirements(building));
+		await interaction.editReply(messagePayload);
 	}
 };
 export default BuildingsCommand
