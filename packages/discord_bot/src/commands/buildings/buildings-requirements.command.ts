@@ -12,7 +12,7 @@ const BuildingsCommand: CommandInterface = {
 				.setRequired(true)
 				.setDescription('Choose a building')
 				.setAutocomplete(true))
-		.addStringOption(option =>
+		.addIntegerOption(option =>
 			option.setName('level')
 				.setDescription('choose a level')
 				.setRequired(true)
@@ -36,6 +36,10 @@ const BuildingsCommand: CommandInterface = {
 	},
 
 	async execute(interaction) {
+		const name = interaction.options.getString('building') || '';
+		const level = interaction.options.getInteger('level') || 1;
+		const data = BuildingsService.findBuildingByLevel(name, level);
+		
 		await interaction.reply(`you've chosen ${interaction.options.get('building')?.value} lvl ${interaction.options.get('level')?.value}`)
 	}
 };
