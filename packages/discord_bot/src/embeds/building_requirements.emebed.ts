@@ -6,6 +6,9 @@ import path from "path";
 export class BuildingRequerimentsEmbed {
 
   private static formatResourceMillions(resource: number) {
+    if (resource < 1000) {
+      return String(resource)
+    }
     if (resource < 1000000) {
       return String(`${resource / 1000} K`);
     }
@@ -17,38 +20,49 @@ export class BuildingRequerimentsEmbed {
 
   public static getBuildingRequirements(buildingData: any) {
     const title = `${startCase(buildingData.name)} Lv. ${buildingData.level}`;
-    const ImageResource = `${buildingData.resource}.png`;
-    const ImageFile = new AttachmentBuilder(path.join(__dirname, 'assets', `${buildingData.resource}.png`));
+    const buildingAssets = `${buildingData.resource}.png`;
+    const buildingFile = new AttachmentBuilder(path.join(__dirname, 'assets', 'buildings', `${buildingData.resource}.png`));
 
-    const headerEmbed = new EmbedRoRBuilder({ setAuthor: true })
-      .setTitle(title)
-      .setThumbnail(`attachment://${ImageResource}`)
-      .addFields(
-        { name: 'Level requirements', value: buildingData.requirements.join('\n') || 'Nothing', inline: true },
-        { name: 'Level unlocks', value: buildingData.unlocks.join('\n') || 'Nothing cool', inline: true },
-      );
+    const { food, wood, stone, arrow_of_resistance, book_of_covenant, master_blueprint } = buildingData.cost;
 
-    const costEmbed = new EmbedRoRBuilder()
-      .setTitle(`Resources to unlock level`);
-    const { food, wood, stone } = buildingData.cost;
-
+    const basicRssFields = [];
 
     if (food) {
-      //TODO make emojis and static information direct to env
-      costEmbed.addFields({ name: '<:resource_food:1224522062505185382>', value: this.formatResourceMillions(food), inline: true })
+      basicRssFields.push({ name: '<:food:1224522062505185382>', value: this.formatResourceMillions(food), inline: true})
     }
 
     if (wood) {
-      costEmbed.addFields({ name: '<:resource_wood:1224525572361949194>', value: this.formatResourceMillions(wood), inline: true })
+      basicRssFields.push({ name: '<:wood:1224525572361949194>', value: this.formatResourceMillions(wood), inline: true})
     }
 
     if (stone) {
-      costEmbed.addFields({ name: '<:resource_stone:1224525570667319418>', value: this.formatResourceMillions(stone), inline: true })
+      basicRssFields.push({ name: '<:stone:1224525570667319418>', value: this.formatResourceMillions(stone), inline: true})
     }
 
+    if (arrow_of_resistance) {
+      basicRssFields.push({ name: '<:arrow_of_resistence:1242137239505473598>', value: this.formatResourceMillions(arrow_of_resistance), inline: true})
+    }
+
+    if (book_of_covenant) {
+      basicRssFields.push({ name: '<:book_of_covenant:1242136049132769370>', value: this.formatResourceMillions(book_of_covenant), inline: true})
+    }
+
+    if (master_blueprint) {
+      basicRssFields.push({ name: '<:master_blueprint:1242136083299307611>', value: this.formatResourceMillions(master_blueprint), inline: true})
+    }
+
+    const headerEmbed = new EmbedRoRBuilder()
+    .setTitle(title)
+    .setThumbnail(`attachment://${buildingAssets}`)
+    .addFields(
+      { name: 'Required Resources', value: ' '},
+      ...basicRssFields,
+      { name: 'Required Buildings', value: buildingData.requirements.join('\n') || 'Nothing'},
+      { name: 'Unlocks', value: buildingData.unlocks.join('\n') || 'Nothing cool'},
+    );
 
 
-    return { embeds: [headerEmbed, costEmbed], files: [ImageFile] };
+    return { embeds: [headerEmbed], files: [buildingFile] };
   }
 
 }
