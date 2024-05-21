@@ -1,7 +1,9 @@
-import { AttachmentBuilder } from "discord.js";
+import { AttachmentBuilder, embedLength } from "discord.js";
 import { EmbedRoRBuilder } from "./base_builder.embed";
 import { startCase } from "lodash";
-import path from "path";
+import url from 'url';
+import dotenv from'dotenv'
+dotenv.config();
 
 export class BuildingRequerimentsEmbed {
 
@@ -21,7 +23,13 @@ export class BuildingRequerimentsEmbed {
   public static getBuildingRequirements(buildingData: any) {
     const title = `${startCase(buildingData.name)} Lv. ${buildingData.level}`;
     const buildingAssets = `${buildingData.resource}.png`;
-    const buildingFile = new AttachmentBuilder(path.join(__dirname, 'assets', 'buildings', `${buildingData.resource}.png`));
+
+    const buildingImageUrl = url.format({
+      protocol: 'https',
+      hostname: process.env.AWS_BUIDLING_BUCKET ||'',
+      pathname: `/${buildingAssets}`,
+    })
+    const buildingFile = new AttachmentBuilder(buildingImageUrl);
 
     const { food, wood, stone, arrow_of_resistance, book_of_covenant, master_blueprint } = buildingData.cost;
 
@@ -60,7 +68,6 @@ export class BuildingRequerimentsEmbed {
       { name: 'Required Buildings', value: buildingData.requirements.join('\n') || 'Nothing'},
       { name: 'Unlocks', value: buildingData.unlocks.join('\n') || 'Nothing cool'},
     );
-
 
     return { embeds: [headerEmbed], files: [buildingFile] };
   }

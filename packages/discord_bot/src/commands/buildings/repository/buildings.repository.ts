@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 export class BuildingsRepository {
 
-  protected _jsonPath = path.join(__dirname, 'data')
+  protected _jsonPath = path.join(__dirname, 'embeds')
   protected _BUILDINGS_METADATA: { name: string, resource: string, data: any[] }[] = [
     { name: 'city hall', resource: 'City_Hall', data: [] },
     { name: 'academy', resource: 'Academy', data: [] },
@@ -31,7 +31,13 @@ export class BuildingsRepository {
     if (BuildingsRepository._instance) return BuildingsRepository._instance;
 
     this._BUILDINGS_METADATA.forEach((build) => {
+      try {
+        fs.accessSync(path.join(this._jsonPath, `${build.resource}.json`));
+      } catch (error) {
+        return;
+      }
       const data = JSON.parse(fs.readFileSync(path.join(this._jsonPath, `${build.resource}.json`), 'utf-8'));
+      
       build.data = data;
     })
 
@@ -43,19 +49,13 @@ export class BuildingsRepository {
   };
 
   public getBuildingsChoices() {
-    return this._BUILDINGS_METADATA.map(data => data.name);
-  }
-
-  public getLevelChoices() {
-    return new Array(25).fill(null).map((_, i) => `${i + 1}`);
+    return this._BUILDINGS_METADATA.map(data => { return { name: data.name, value: data.name } });
   }
 
   public findBuildingByLevel(name: string, level: number) {
     const building = this._BUILDINGS_METADATA.filter(data => data.name === name).pop();
     if (!building) return;
     const levelData = building.data[level - 1];
-    levelData.name = building.name;
-    levelData.resource = building.resource;
     return levelData;
   }
 }
