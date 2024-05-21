@@ -8,10 +8,6 @@ export class BuildingsService {
     return this.buildingsRepository.getBuildingsChoices();
   }
 
-  public static getLevelChoices() {
-    return this.buildingsRepository.getLevelChoices();
-  }
-
   public static findBuildingByLevel(name: string, level: number) {
     return this.buildingsRepository.findBuildingByLevel(name, level);
   }

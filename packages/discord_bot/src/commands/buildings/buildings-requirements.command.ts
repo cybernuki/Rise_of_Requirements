@@ -12,37 +12,23 @@ const BuildingsCommand: CommandInterface = {
 			option.setName('building')
 				.setRequired(true)
 				.setDescription('Choose a building')
-				.setAutocomplete(true))
-		.addStringOption(option =>
+				.addChoices(...BuildingsService.getBuildingsChoices())
+		)
+		.addIntegerOption(option =>
 			option.setName('level')
 				.setDescription('choose a level')
 				.setRequired(true)
-				.setAutocomplete(true)),
-	async autocomplete(interaction) {
-		const focusedOption = interaction.options.getFocused(true);
-		let choices: string[] = [];
-
-		if (focusedOption.name === 'building') {
-			choices = BuildingsService.getBuildingsChoices();
-		}
-
-		if (focusedOption.name === 'level') {
-			choices = BuildingsService.getLevelChoices();
-		}
-
-		const filtered = choices.filter(choice => choice.toLowerCase().startsWith(focusedOption.value));
-		await interaction.respond(
-			filtered.map(choice => ({ name: choice, value: choice })),
-		);
-	},
+				.setMinValue(1)
+				.setMaxValue(25)
+		),
 
 	async execute(interaction) {
 		await interaction.deferReply();
-		const name = interaction.options.getString('building') || '';
-		const level = interaction.options.getString('level') || '1';
-		const building = BuildingsService.findBuildingByLevel(name, parseInt(level));
+		const name = interaction.options.getString('building', true);
+		const level = interaction.options.getInteger('level', true);
+		const buildingEmbed = BuildingsService.findBuildingByLevel(name, level);
 
-		const messagePayload: MessagePayload = new MessagePayload(interaction.user, BuildingRequerimentsEmbed.getBuildingRequirements(building));
+		const messagePayload: MessagePayload = new MessagePayload(interaction.user, {...buildingEmbed});
 		await interaction.editReply(messagePayload);
 	}
 };
