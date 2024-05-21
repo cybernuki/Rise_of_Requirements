@@ -1,5 +1,7 @@
-import { SlashCommandBuilder } from "discord.js";
+import { MessagePayload, SlashCommandBuilder } from "discord.js";
 import { CommandInterface } from "../interface/command.interface";
+import { BuildingsService } from "./Services/buildings.service";
+import { BuildingRequerimentsEmbed } from "../../embeds/building_requirements.emebed";
 
 const BuildingsCommand: CommandInterface = {
 	data: new SlashCommandBuilder()
@@ -18,34 +20,14 @@ const BuildingsCommand: CommandInterface = {
 				.setAutocomplete(true)),
 	async autocomplete(interaction) {
 		const focusedOption = interaction.options.getFocused(true);
-		let choices: any[] = [];
+		let choices: string[] = [];
 
 		if (focusedOption.name === 'building') {
-			choices = [
-				"city hall",
-				"academy",
-				"alliance center",
-				"archery range",
-				"barracks",
-				"castle",
-				"farm",
-				"goldmine",
-				"hospital",
-				"lumber mill",
-				"quarry",
-				"scout camp",
-				"siege workshop",
-				"stable",
-				"storehouse",
-				"tavern",
-				"trading post",
-				"wall",
-				"watchtower",
-			];
+			choices = BuildingsService.getBuildingsChoices();
 		}
 
 		if (focusedOption.name === 'level') {
-			choices = new Array(25).fill(null).map((_, i) => `${i+1}`);
+			choices = BuildingsService.getLevelChoices();
 		}
 
 		const filtered = choices.filter(choice => choice.toLowerCase().startsWith(focusedOption.value));
@@ -55,7 +37,13 @@ const BuildingsCommand: CommandInterface = {
 	},
 
 	async execute(interaction) {
-		await interaction.reply(`you've chosen ${interaction.options.get('building')?.value} lvl ${interaction.options.get('level')?.value}`)
+		await interaction.deferReply();
+		const name = interaction.options.getString('building') || '';
+		const level = interaction.options.getString('level') || '1';
+		const building = BuildingsService.findBuildingByLevel(name, parseInt(level));
+
+		const messagePayload: MessagePayload = new MessagePayload(interaction.user, BuildingRequerimentsEmbed.getBuildingRequirements(building));
+		await interaction.editReply(messagePayload);
 	}
 };
 export default BuildingsCommand
