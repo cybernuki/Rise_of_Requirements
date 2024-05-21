@@ -29,6 +29,7 @@ const BuildingsCommand: CommandInterface = {
 		const buildingEmbed = BuildingsService.findBuildingByLevel(name, level);
 
 		const messagePayload: MessagePayload = new MessagePayload(interaction.user, {...buildingEmbed});
+		console.log(`Replying to ${name} Lv. ${level}`);
 		await interaction.editReply(messagePayload);
 	}
 };
